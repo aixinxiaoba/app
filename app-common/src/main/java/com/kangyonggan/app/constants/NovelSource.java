@@ -45,7 +45,12 @@ public enum NovelSource {
     /**
      * 63小说
      */
-    NS07("NS07", "63小说", "https://www.63xs.com/");
+    NS07("NS07", "63小说", "https://www.63xs.com/"),
+
+    /**
+     * 2K小说
+     */
+    NS08("NS08", "2K小说", "https://www.fpzw.com/");
 
     /**
      * 来源代码

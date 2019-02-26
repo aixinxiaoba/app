@@ -336,6 +336,11 @@ public class NovelServiceImpl extends BaseService<Novel> implements NovelService
             Document sectionDoc = HtmlUtil.parseUrl(NovelSource.NS07.getUrl() + "book/" + novel.getCode() + "/" + code + ".html");
             title = sectionDoc.select(".bookname h1").html().trim().replace("章节目录 ", "");
             content = sectionDoc.select("#content").html();
+        } else if (NovelSource.NS08.getCode().equals(novel.getSource())) {
+            // 2K小说
+            Document sectionDoc = HtmlUtil.parseUrl(NovelSource.NS08.getUrl() + "xiaoshuo/" + novel.getCode() + "/" + code + ".html");
+            title = sectionDoc.select("#box h2").html().trim();
+            content = sectionDoc.select("#box p.Text").html();
         } else {
             log.error("未知小说源, name={}, source={}", novel.getName(), novel.getSource());
         }
@@ -387,6 +392,9 @@ public class NovelServiceImpl extends BaseService<Novel> implements NovelService
             // yuanzunxs
         } else if (NovelSource.NS07.getCode().equals(novel.getSource())) {
             // 63xs
+        } else if (NovelSource.NS08.getCode().equals(novel.getSource())) {
+            // 2K小说
+            startIndex = 4;
         } else {
             log.error("未知小说源, name={}, source={}", novel.getName(), novel.getSource());
         }
@@ -428,6 +436,10 @@ public class NovelServiceImpl extends BaseService<Novel> implements NovelService
             // 63xs
             Document document = HtmlUtil.parseUrl(NovelSource.NS07.getUrl() + "book/" + novel.getCode() + "/");
             return document.select("#list dd a");
+        } else if (NovelSource.NS08.getCode().equals(novel.getSource())) {
+            // 2K小说
+            Document document = HtmlUtil.parseUrl(NovelSource.NS08.getUrl() + "xiaoshuo/" + novel.getCode() + "/");
+            return document.select("dl.book dd a");
         } else {
             log.error("未知小说源, name={}, source={}", novel.getName(), novel.getSource());
         }
