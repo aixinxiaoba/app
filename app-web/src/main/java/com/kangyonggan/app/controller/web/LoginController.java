@@ -11,6 +11,7 @@ import com.kangyonggan.app.util.Digests;
 import com.kangyonggan.app.util.Encodes;
 import com.kangyonggan.app.util.RedisSession;
 import com.kangyonggan.common.Response;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 @RequestMapping("/")
+@Log4j2
 public class LoginController extends BaseController {
 
     @Autowired
@@ -90,6 +92,7 @@ public class LoginController extends BaseController {
         if (!dbUser.getPassword().equals(password)) {
             RedisSession.put("ERR_COUNT", ++errCount);
             response.put("errCount", errCount);
+            log.error("密码错误, ip:{}, user:{}", getIpAddress(), user);
             return response.failure("密码错误");
         }
 
