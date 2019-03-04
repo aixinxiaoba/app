@@ -83,7 +83,6 @@ public class RedisSession {
      */
     public static <T> T get(String key, Class<T> clazz) {
         String jsessionid = InterceptorHelper.getJSessionId();
-        log.info("jsid:{}", jsessionid);
         return (T) redisService().get(PREFIX + jsessionid + ":" + key);
     }
 
