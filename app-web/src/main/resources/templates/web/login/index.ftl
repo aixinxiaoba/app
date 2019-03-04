@@ -8,7 +8,9 @@
             <@input label="密码" name="password" type="password" required=true validator="isPassword">
                 <a href="${ctx}/forgot" target="_blank" class="forgot">忘记密码？</a>
             </@input>
+        <div id="captcha-div" class="hidden">
             <@captcha label="验证码" id="captcha" name="captcha"/>
+        </div>
 
             <@actions>
                 <@button name="登录" type="submit" icon="fa-check"/>
@@ -38,8 +40,9 @@
      * 登录失败的回调
      */
     function error() {
-        $("#captcha").attr('src', '${ctx}/captcha?r=' + Math.random());
+        $("#captcha-div img").attr('src', '${ctx}/captcha?r=' + Math.random());
         $("#captcha").val("");
+        $("#captcha-div").removeClass("hidden");
     }
 
     $("body").css({"background": "#000"});

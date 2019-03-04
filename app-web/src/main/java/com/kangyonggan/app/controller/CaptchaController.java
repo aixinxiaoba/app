@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -53,7 +54,7 @@ public class CaptchaController {
      * @throws IOException 可能抛出异常
      */
     @GetMapping
-    public void genCode(HttpServletResponse resp) throws IOException {
+    public void genCode(HttpServletRequest request, HttpServletResponse resp) throws IOException {
         // 图像
         BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = image.getGraphics();
@@ -98,6 +99,8 @@ public class CaptchaController {
         // 把验证码保存到redis中
         RedisSession.put(AppConstants.KEY_CAPTCHA, captcha.toString());
         log.info("验证码captcha为: {}", captcha);
+
+        log.info(request.getSession().getId());
 
         // 禁止缓存
         resp.setHeader("Pragma", "no-cache");

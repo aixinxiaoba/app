@@ -55,22 +55,32 @@ public class LoginController extends BaseController {
      */
     @PostMapping("login")
     @ResponseBody
-    public Response login(@RequestParam("captcha") String captcha, User user) {
+    public Response login(@RequestParam(value = "captcha", required = false, defaultValue = "") String captcha, User user) {
         Response response = Response.getSuccessResponse();
-        String realCaptcha = RedisSession.getString(AppConstants.KEY_CAPTCHA);
 
-        // 清除验证码
-        RedisSession.delete(AppConstants.KEY_CAPTCHA);
+        Integer errCount = RedisSession.get("ERR_COUNT", Integer.class);
+        if (errCount == null) {
+            errCount = 0;
+        }
+        if (errCount > 0) {
+            String realCaptcha = RedisSession.getString(AppConstants.KEY_CAPTCHA);
 
-        if (!captcha.equalsIgnoreCase(realCaptcha)) {
-            return response.failure("验证码错误或已失效，请重新获取");
+            // 清除验证码
+            RedisSession.delete(AppConstants.KEY_CAPTCHA);
+            if (!captcha.equalsIgnoreCase(realCaptcha)) {
+                return response.failure("验证码错误或已失效，请重新获取");
+            }
         }
 
         User dbUser = userService.findUserByEmail(user.getEmail());
         if (dbUser == null) {
+            RedisSession.put("ERR_COUNT", ++errCount);
+            response.put("errCount", errCount);
             return response.failure("电子邮箱不存在");
         }
         if (dbUser.getIsDeleted() == 1) {
+            RedisSession.put("ERR_COUNT", ++errCount);
+            response.put("errCount", errCount);
             return response.failure("电子邮箱已被锁定");
         }
 
@@ -78,6 +88,8 @@ public class LoginController extends BaseController {
         byte[] hashPassword = Digests.sha1(user.getPassword().getBytes(), salt, AppConstants.HASH_INTERATIONS);
         String password = Encodes.encodeHex(hashPassword);
         if (!dbUser.getPassword().equals(password)) {
+            RedisSession.put("ERR_COUNT", ++errCount);
+            response.put("errCount", errCount);
             return response.failure("密码错误");
         }
 
@@ -93,6 +105,7 @@ public class LoginController extends BaseController {
         loginLog.setEmail(dbUser.getEmail());
 
         loginLogService.saveLoginLog(loginLog);
+        RedisSession.put("ERR_COUNT", 0);
         return response;
     }
 
