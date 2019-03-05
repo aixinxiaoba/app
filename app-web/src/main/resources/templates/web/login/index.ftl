@@ -8,7 +8,7 @@
             <@input label="密码" name="password" type="password" required=true validator="isPassword">
                 <a href="${ctx}/forgot" target="_blank" class="forgot">忘记密码？</a>
             </@input>
-        <div id="captcha-div" class="hidden">
+        <div id="captcha-div" class="hidden2">
             <@captcha label="验证码" id="captcha" name="captcha"/>
         </div>
 
@@ -42,7 +42,7 @@
     function error() {
         $("#captcha-div img").attr('src', '${ctx}/captcha?r=' + Math.random());
         $("#captcha").val("");
-        $("#captcha-div").removeClass("hidden");
+        $("#captcha-div").removeClass("hidden2");
     }
 
     $("body").css({"background": "#000"});

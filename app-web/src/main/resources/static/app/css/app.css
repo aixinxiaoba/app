@@ -48,6 +48,10 @@ body {
 }
 
 .hidden {
+    display: none;
+}
+
+.hidden2 {
     display: none !important;
 }
 
