@@ -1,8 +1,8 @@
 package com.kangyonggan.app.controller;
 
+import com.kangyonggan.app.constants.AppConstants;
 import com.kangyonggan.app.model.User;
 import com.kangyonggan.app.util.IpUtil;
-import com.kangyonggan.app.util.RedisSession;
 import com.kangyonggan.app.util.StringUtil;
 import com.kangyonggan.common.Params;
 import com.kangyonggan.common.Query;
@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.Random;
 
@@ -40,21 +41,14 @@ public class BaseController {
     }
 
     /**
-     * 获取当前登录的用户
-     *
-     * @return
-     */
-    protected User currentUser() {
-        return RedisSession.currentUser();
-    }
-
-    /**
      * 获取当前登录的用户ID
      *
+     * @param session
      * @return
      */
-    protected Long currentUserId() {
-        return RedisSession.currentUserId();
+    protected Long currentUserId(HttpSession session) {
+        User user = (User) session.getAttribute(AppConstants.KEY_SESSION_USER);
+        return user == null ? null : user.getUserId();
     }
 
     /**

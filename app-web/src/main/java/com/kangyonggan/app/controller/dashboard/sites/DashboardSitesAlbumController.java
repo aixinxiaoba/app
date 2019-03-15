@@ -21,6 +21,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * @author kangyonggan
  * @since 1/4/19
@@ -80,6 +82,7 @@ public class DashboardSitesAlbumController extends BaseController {
     /**
      * 保存相册
      *
+     * @param session
      * @param album
      * @param file
      * @return
@@ -89,14 +92,14 @@ public class DashboardSitesAlbumController extends BaseController {
     @ResponseBody
     @PermissionMenu("SITES_ALBUM")
     @Token(key = "createAlbum", type = Token.Type.CHECK)
-    public Response save(Album album, @RequestParam(value = "file", required = false) MultipartFile file) throws FileUploadException {
+    public Response save(HttpSession session, Album album, @RequestParam(value = "file", required = false) MultipartFile file) throws FileUploadException {
         if (file != null && !file.isEmpty()) {
             String cover = fileHelper.genFileName("album");
             FileUpload.upload(fileHelper.getFileUploadPath() + "album/", cover, file);
             album.setCover("upload/album/" + cover + "." + FilenameUtils.getExtension(file.getOriginalFilename()));
         }
 
-        album.setUserId(currentUserId());
+        album.setUserId(currentUserId(session));
         albumService.saveAlbum(album);
         return Response.getSuccessResponse();
     }

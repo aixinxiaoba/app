@@ -1,9 +1,11 @@
 package com.kangyonggan.app.freemarker;
 
+import com.kangyonggan.app.constants.AppConstants;
 import com.kangyonggan.app.model.User;
-import com.kangyonggan.app.util.RedisSession;
 import freemarker.core.Environment;
 import freemarker.template.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -23,7 +25,8 @@ public abstract class AbstractSuperTag implements TemplateDirectiveModel {
      * @return
      */
     protected User getUser() {
-        return RedisSession.currentUser();
+        User user = (User) ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute(AppConstants.KEY_SESSION_USER);
+        return user;
     }
 
     @Override

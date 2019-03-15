@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" monitorInterval="300">
     <properties>
-        <property name="LOG_HOME">/home/hxzq/logs/app</property>
+        <property name="LOG_HOME">/root/logs/app</property>
     </properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
@@ -45,10 +45,7 @@
             <AppenderRef ref="AsyncAll"></AppenderRef>
             <AppenderRef ref="AsyncError"></AppenderRef>
         </Logger>
-        <Logger name="sdk.biz.err" level="fatal" additivity="false">
-        </Logger>
         <Root level="info" additivity="true">
-            <AppenderRef ref="Console"></AppenderRef>
             <AppenderRef ref="AsyncAll"></AppenderRef>
             <AppenderRef ref="AsyncError"></AppenderRef>
         </Root>

@@ -16,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * @author kangyonggan
  * @since 1/4/19
@@ -72,6 +74,7 @@ public class DashboardSitesVideoController extends BaseController {
     /**
      * 保存视频
      *
+     * @param session
      * @param video
      * @param file
      * @return
@@ -81,7 +84,7 @@ public class DashboardSitesVideoController extends BaseController {
     @ResponseBody
     @PermissionMenu("SITES_VIDEO")
     @Token(key = "createVideo", type = Token.Type.CHECK)
-    public Response save(Video video, @RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
+    public Response save(HttpSession session, Video video, @RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
         upload(video, file);
 
         // 允许全屏
@@ -89,7 +92,7 @@ public class DashboardSitesVideoController extends BaseController {
         // http转https
         video.setContent(video.getContent().replace("http://", "https://"));
 
-        video.setUserId(currentUserId());
+        video.setUserId(currentUserId(session));
         videoService.saveVideo(video);
         return Response.getSuccessResponse();
     }

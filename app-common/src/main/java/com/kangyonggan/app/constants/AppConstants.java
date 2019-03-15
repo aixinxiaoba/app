@@ -21,4 +21,14 @@ public interface AppConstants {
      */
     String KEY_CAPTCHA = "key-captcha";
 
+    /**
+     * 用户在session中的key
+     */
+    String KEY_SESSION_USER = "session-user";
+
+    /**
+     * 视频阅读标识
+     */
+    String KEY_VIDEO_READ = "APP:VIDEO:";
+
 }

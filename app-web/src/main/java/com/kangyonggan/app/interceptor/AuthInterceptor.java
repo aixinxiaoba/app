@@ -2,9 +2,10 @@ package com.kangyonggan.app.interceptor;
 
 import com.kangyonggan.app.annotation.PermissionLogin;
 import com.kangyonggan.app.annotation.PermissionMenu;
+import com.kangyonggan.app.constants.AppConstants;
 import com.kangyonggan.app.model.Menu;
+import com.kangyonggan.app.model.User;
 import com.kangyonggan.app.service.MenuService;
-import com.kangyonggan.app.util.RedisSession;
 import com.kangyonggan.app.util.SpringUtils;
 import com.kangyonggan.common.Resp;
 import com.kangyonggan.common.Response;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -35,14 +37,15 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
+            HttpSession session = request.getSession();
 
             // 校验登录权限注解
-            if (!validLogin(response, handlerMethod)) {
+            if (!validLogin(session, response, handlerMethod)) {
                 return false;
             }
 
             // 校验菜单权限注解
-            if (!validMenu(response, handlerMethod)) {
+            if (!validMenu(session, response, handlerMethod)) {
                 return false;
             }
         }
@@ -67,19 +70,21 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     /**
      * 校验菜单权限注解
      *
+     * @param session
      * @param response
      * @param handlerMethod
      * @return
      * @throws Exception
      */
-    private boolean validMenu(HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
+    private boolean validMenu(HttpSession session, HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
         PermissionMenu permissionMenu = handlerMethod.getMethodAnnotation(PermissionMenu.class);
         if (permissionMenu != null) {
-            if (!isLogin(response)) {
+            if (!isLogin(session, response)) {
                 return false;
             }
 
-            boolean hasMenu = getMenuService().hasMenu(RedisSession.currentUserId(), permissionMenu.value());
+            User user = (User) session.getAttribute(AppConstants.KEY_SESSION_USER);
+            boolean hasMenu = getMenuService().hasMenu(user.getUserId(), permissionMenu.value());
             if (!hasMenu) {
                 if (InterceptorHelper.isAjaxRequest(ParamsInterceptor.getRequest())) {
                     // 9997: 权限不足
@@ -99,13 +104,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     /**
      * 判断是否登录，没登录就重定向到登录
      *
+     * @param session
      * @param response
      * @return
      * @throws IOException
      */
-    private boolean isLogin(HttpServletResponse response) throws IOException {
+    private boolean isLogin(HttpSession session, HttpServletResponse response) throws IOException {
         // 判断是否登录
-        if (RedisSession.currentUser() == null) {
+        if (session.getAttribute(AppConstants.KEY_SESSION_USER) == null) {
             if (InterceptorHelper.isAjaxRequest(ParamsInterceptor.getRequest())) {
                 // 9998: 登录失效
                 Response resp = Response.getFailureResponse(Resp.INVALID_LOGIN.getRespCo(), Resp.INVALID_LOGIN.getRespMsg());
@@ -123,16 +129,17 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     /**
      * 校验登录权限注解
      *
+     * @param session
      * @param response
      * @param handlerMethod
      * @return
      * @throws Exception
      */
-    private boolean validLogin(HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
+    private boolean validLogin(HttpSession session, HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
         PermissionLogin permissionMenu = handlerMethod.getMethodAnnotation(PermissionLogin.class);
         if (permissionMenu != null) {
             // 判断是否登录
-            if (!isLogin(response)) {
+            if (!isLogin(session, response)) {
                 return false;
             }
         }

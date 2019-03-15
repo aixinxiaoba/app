@@ -1,7 +1,6 @@
 package com.kangyonggan.app.interceptor;
 
 import com.kangyonggan.app.annotation.Token;
-import com.kangyonggan.app.util.RedisSession;
 import com.kangyonggan.app.util.StringUtil;
 import com.kangyonggan.common.Response;
 import lombok.extern.log4j.Log4j2;
@@ -52,7 +51,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             if (token != null && token.type() == Token.Type.GENERATE) {
                 String userToken = UUID.randomUUID().toString();
                 modelAndView.addObject("_token", userToken);
-                RedisSession.put(token.key(), userToken);
+                request.getSession().setAttribute(token.key(), userToken);
                 log.info("生成一个token，key={}, token={}", token.key(), userToken);
             }
         }
@@ -70,7 +69,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     private boolean isRepeatSubmit(HttpServletRequest request, Token token) {
         try {
             String userToken = request.getParameter("_token");
-            String sessionToken = RedisSession.getString(token.key());
+            String sessionToken = (String) request.getSession().getAttribute(token.key());
             log.info("校验是否重复提交，key={}, token={}, sessionToken={}", token.key(), userToken, sessionToken);
             if (StringUtil.hasEmpty(userToken, sessionToken)) {
                 return true;
@@ -80,7 +79,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             log.error("校验是否重复提交异常", e);
             return true;
         } finally {
-            RedisSession.delete(token.key());
+            request.getSession().removeAttribute(token.key());
         }
     }
 

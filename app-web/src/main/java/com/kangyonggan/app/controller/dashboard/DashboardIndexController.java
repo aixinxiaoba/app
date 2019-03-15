@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * @author kangyonggan
  * @since 2018/12/9 0009
@@ -35,15 +37,16 @@ public class DashboardIndexController extends BaseController {
     /**
      * 修改皮肤
      *
+     * @param session
      * @param skin
      * @return
      */
     @PostMapping("changeSkin")
     @ResponseBody
     @PermissionMenu("DASHBOARD")
-    public Response changeSkin(@RequestParam("skin") String skin) {
+    public Response changeSkin(HttpSession session, @RequestParam("skin") String skin) {
         UserProfile userProfile = new UserProfile();
-        userProfile.setUserId(currentUserId());
+        userProfile.setUserId(currentUserId(session));
         userProfile.setSkin(skin);
         userProfileService.updateUserProfile(userProfile);
         return Response.getSuccessResponse();

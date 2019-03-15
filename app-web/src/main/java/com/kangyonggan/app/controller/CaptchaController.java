@@ -1,7 +1,6 @@
 package com.kangyonggan.app.controller;
 
 import com.kangyonggan.app.constants.AppConstants;
-import com.kangyonggan.app.util.RedisSession;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -49,11 +49,12 @@ public class CaptchaController {
     /**
      * 获取验证码
      *
-     * @param resp 响应
-     * @throws IOException 可能抛出异常
+     * @param request
+     * @param response
+     * @throws IOException
      */
     @GetMapping
-    public void genCode(HttpServletResponse resp) throws IOException {
+    public void genCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 图像
         BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = image.getGraphics();
@@ -95,18 +96,18 @@ public class CaptchaController {
             captcha.append(code);
         }
 
-        // 把验证码保存到redis中
-        RedisSession.put(AppConstants.KEY_CAPTCHA, captcha.toString());
+        // 把验证码保存到session中
+        request.getSession().setAttribute(AppConstants.KEY_CAPTCHA, captcha.toString());
         log.info("验证码captcha为: {}", captcha);
 
         // 禁止缓存
-        resp.setHeader("Pragma", "no-cache");
-        resp.setHeader("Cache-Control", "no-cache");
-        resp.setDateHeader("Expires", 0);
-        resp.setContentType("image/jpeg");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+        response.setContentType("image/jpeg");
 
         // 输出图像
-        ServletOutputStream sos = resp.getOutputStream();
+        ServletOutputStream sos = response.getOutputStream();
         ImageIO.write(image, "jpeg", sos);
         sos.flush();
         sos.close();

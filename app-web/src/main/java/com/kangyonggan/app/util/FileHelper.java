@@ -1,15 +1,13 @@
 package com.kangyonggan.app.util;
 
-import com.kangyonggan.app.constants.RedisKey;
-import com.kangyonggan.app.service.RedisService;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * @author kangyonggan
@@ -17,9 +15,6 @@ import java.util.Date;
  */
 @Component
 public class FileHelper {
-
-    @Autowired
-    private RedisService redisService;
 
     /**
      * 文件跟路径
@@ -41,7 +36,7 @@ public class FileHelper {
             prefix = "";
         }
 
-        String nextVal = String.valueOf(redisService.incr(RedisKey.KEY_FILE_NAME));
+        String nextVal = String.valueOf(new Random().nextInt());
         String currentDate = new SimpleDateFormat(DateUtil.PATTERN_DATE).format(new Date());
 
         return prefix + currentDate + StringUtils.leftPad(nextVal, 8, "0");
