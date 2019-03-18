@@ -33,11 +33,10 @@ java -jar app-web/target/app-web-*.jar
 4. Mybatis
 5. PageHelper
 6. Mybatis Generator
-7. Redis
-8. Freemarker
-9. jQuery
-10. Html
-11. Css
-12. JavaScript
-13. Bootstrap
+7. Freemarker
+8. jQuery
+9. Html
+10. Css
+11. JavaScript
+12. Bootstrap
 
