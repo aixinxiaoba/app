@@ -1,7 +1,5 @@
 package com.kangyonggan.app.service.impl;
 
-import com.github.ofofs.jca.annotation.Cache;
-import com.github.ofofs.jca.annotation.CacheDel;
 import com.github.pagehelper.PageHelper;
 import com.kangyonggan.app.constants.YesNo;
 import com.kangyonggan.app.model.Category;
@@ -27,7 +25,6 @@ import java.util.List;
 public class CategoryServiceImpl extends BaseService<Category> implements CategoryService {
 
     @Override
-    @Cache("category:type:${type}")
     public List<Category> findTreeCategoriesByType(String type) {
         Example example = new Example(Category.class);
         example.createCriteria().andEqualTo("categoryType", type).andEqualTo("isDeleted", YesNo.NO.getCode());
@@ -39,7 +36,6 @@ public class CategoryServiceImpl extends BaseService<Category> implements Catego
     }
 
     @Override
-    @Cache("category:drop:type:${type}")
     public List<Category> findCategoriesByType(String type) {
         Example example = new Example(Category.class);
         example.createCriteria().andEqualTo("categoryType", type).andEqualTo("isDeleted", YesNo.NO.getCode())
@@ -80,7 +76,6 @@ public class CategoryServiceImpl extends BaseService<Category> implements Catego
     }
 
     @Override
-    @CacheDel("category:*")
     public void saveCategory(Category category) {
         myMapper.insertSelective(category);
     }
@@ -91,13 +86,11 @@ public class CategoryServiceImpl extends BaseService<Category> implements Catego
     }
 
     @Override
-    @CacheDel("category:*")
     public void updateCategory(Category category) {
         myMapper.updateByPrimaryKeySelective(category);
     }
 
     @Override
-    @CacheDel("category:*")
     public void deleteCategories(String categoryIds) {
         if (StringUtils.isEmpty(categoryIds)) {
             return;
@@ -113,7 +106,6 @@ public class CategoryServiceImpl extends BaseService<Category> implements Catego
     }
 
     @Override
-    @CacheDel("category:*")
     public void restoreCategories(String categoryIds) {
         if (StringUtils.isEmpty(categoryIds)) {
             return;

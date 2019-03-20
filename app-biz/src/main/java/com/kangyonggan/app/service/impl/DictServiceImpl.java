@@ -1,7 +1,5 @@
 package com.kangyonggan.app.service.impl;
 
-import com.github.ofofs.jca.annotation.Cache;
-import com.github.ofofs.jca.annotation.CacheDel;
 import com.github.pagehelper.PageHelper;
 import com.kangyonggan.app.constants.YesNo;
 import com.kangyonggan.app.model.Dict;
@@ -25,7 +23,6 @@ import java.util.List;
 public class DictServiceImpl extends BaseService<Dict> implements DictService {
 
     @Override
-    @Cache("dict:type:${dictType}")
     public List<Dict> findDictsByDictType(String dictType) {
         Example example = new Example(Dict.class);
         example.createCriteria().andEqualTo("isDeleted", YesNo.NO.getCode()).andEqualTo("dictType", dictType);
@@ -37,7 +34,6 @@ public class DictServiceImpl extends BaseService<Dict> implements DictService {
     }
 
     @Override
-    @Cache("dict:type:${dictType}:code:${dictCode}")
     public Dict findDictByDictTypeAndDictCode(String dictType, String dictCode) {
         Dict dict = new Dict();
         dict.setDictType(dictType);
@@ -79,7 +75,6 @@ public class DictServiceImpl extends BaseService<Dict> implements DictService {
     }
 
     @Override
-    @CacheDel("dict:*")
     public void saveDict(Dict dict) {
         myMapper.insertSelective(dict);
     }
@@ -90,13 +85,11 @@ public class DictServiceImpl extends BaseService<Dict> implements DictService {
     }
 
     @Override
-    @CacheDel("dict:*")
     public void updateDict(Dict dict) {
         myMapper.updateByPrimaryKeySelective(dict);
     }
 
     @Override
-    @CacheDel("dict:*")
     public void deleteDicts(String dictIds) {
         if (StringUtils.isEmpty(dictIds)) {
             return;
@@ -112,7 +105,6 @@ public class DictServiceImpl extends BaseService<Dict> implements DictService {
     }
 
     @Override
-    @CacheDel("dict:*")
     public void restoreDicts(String dictIds) {
         if (StringUtils.isEmpty(dictIds)) {
             return;

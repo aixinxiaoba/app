@@ -513,6 +513,31 @@ CREATE INDEX ix_user_id
   ON tb_video (user_id);
 
 -- ----------------------------
+--  Table structure for tb_music
+-- ----------------------------
+DROP TABLE
+  IF EXISTS tb_music;
+
+CREATE TABLE tb_music
+(
+  music_id     BIGINT(20) PRIMARY KEY AUTO_INCREMENT NOT NULL
+    COMMENT '音乐ID',
+  user_id      BIGINT(20)                            NOT NULL
+    COMMENT '用户ID',
+  content      VARCHAR(512)                          NOT NULL
+    COMMENT '音乐代码',
+  is_deleted   TINYINT                               NOT NULL DEFAULT 0
+    COMMENT '逻辑删除',
+  created_time TIMESTAMP                             NOT NULL DEFAULT CURRENT_TIMESTAMP
+    COMMENT '创建时间',
+  updated_time TIMESTAMP                             NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    COMMENT '更新时间'
+)
+  COMMENT '音乐表';
+CREATE INDEX ix_user_id
+  ON tb_music (user_id);
+
+-- ----------------------------
 --  Table structure for tb_note
 -- ----------------------------
 DROP TABLE
@@ -583,8 +608,9 @@ VALUES ('DASHBOARD', '工作台', '', 'dashboard', 0, 'menu-icon fa fa-dashboard
        ('SITES_NOVEL_QUEUE', '小说队列', 'SITES', 'dashboard/sites/novelQueue', 1, ''),
        ('SITES_RECORD', '宝宝点滴', 'SITES', 'dashboard/sites/record', 2, ''),
        ('SITES_ALBUM', '相册管理', 'SITES', 'dashboard/sites/album', 3, ''),
-       ('SITES_VIDEO', '视频管理', 'SITES', 'dashboard/sites/video', 4, ''),
-       ('SITES_NOTE', '留言管理', 'SITES', 'dashboard/sites/note', 5, '');
+       ('SITES_MUSIC', '音乐管理', 'SITES', 'dashboard/sites/music', 4, ''),
+       ('SITES_VIDEO', '视频管理', 'SITES', 'dashboard/sites/video', 5, ''),
+       ('SITES_NOTE', '留言管理', 'SITES', 'dashboard/sites/note', 6, '');
 
 -- ----------------------------
 --  data for tb_user_role
@@ -624,7 +650,8 @@ VALUES ('NAV_BAR', '', 'blog', '博客', 'https://blog.kangyonggan.com', 0, 1),
        ('NAV_BAR', '', 'enjoy', '娱乐', '', 1, 0),
        ('NAV_BAR', 'enjoy', 'novel', '小说', '/novel', 1, 0),
        ('NAV_BAR', 'enjoy', 'album', '相册', '/album', 2, 0),
-       ('NAV_BAR', 'enjoy', 'video', '视频', '/video', 3, 0),
+       ('NAV_BAR', 'enjoy', 'music', '音乐', '/music', 3, 0),
+       ('NAV_BAR', 'enjoy', 'video', '视频', '/video', 4, 0),
        ('NAV_BAR', '', 'tool', '工具', '', 2, 0),
        ('NAV_BAR', 'tool', 'idNo', '身份证', '', 0, 0),
        ('NAV_BAR', 'idNo', 'idNoCheck', '身份证查询', '/tool/idNoCheck', 0, 0),
