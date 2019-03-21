@@ -186,13 +186,13 @@
         <repository>
             <id>releases</id>
             <name>nexus releases</name>
-            <url>http://kangyonggan.com:8081/repository/maven-releases/</url>
+            <url>http://192.168.0.100:8081/repository/maven-releases/</url>
         </repository>
 
         <snapshotRepository>
             <id>snapshots</id>
             <name>nexus snapshots</name>
-            <url>http://kangyonggan.com:8081/repository/maven-snapshots/</url>
+            <url>http://192.168.0.100:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
