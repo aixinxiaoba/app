@@ -31,7 +31,7 @@ public class DashboardSitesRecordController extends BaseController {
      * @return
      */
     @GetMapping
-    @PermissionMenu("SITES_NOVEL_QUEUE")
+    @PermissionMenu("SITES_RECORD")
     public String index() {
         return PATH_ROOT + "/list";
     }
@@ -42,7 +42,7 @@ public class DashboardSitesRecordController extends BaseController {
      * @return
      */
     @GetMapping("list")
-    @PermissionMenu("SITES_NOVEL_QUEUE")
+    @PermissionMenu("SITES_RECORD")
     @ResponseBody
     public Page<Record> list() {
         return new Page<>(recordService.searchRecords(getRequestParams()));
@@ -56,7 +56,7 @@ public class DashboardSitesRecordController extends BaseController {
      * @return
      */
     @GetMapping("{id:[\\d]+}/edit")
-    @PermissionMenu("SITES_NOVEL_QUEUE")
+    @PermissionMenu("SITES_RECORD")
     @Token(key = "editRecord")
     public String edit(@PathVariable("id") Long id, Model model) {
         model.addAttribute("record", recordService.findRecordById(id));
@@ -71,7 +71,7 @@ public class DashboardSitesRecordController extends BaseController {
      */
     @PostMapping("update")
     @ResponseBody
-    @PermissionMenu("SITES_NOVEL_QUEUE")
+    @PermissionMenu("SITES_RECORD")
     @Token(key = "editRecord", type = Token.Type.CHECK)
     public Response update(Record record) {
         recordService.updateRecord(record);
@@ -85,7 +85,7 @@ public class DashboardSitesRecordController extends BaseController {
      * @return 响应
      */
     @GetMapping("delete")
-    @PermissionMenu("SITES_NOVEL_QUEUE")
+    @PermissionMenu("SITES_RECORD")
     @ResponseBody
     public Response delete(@RequestParam("ids") String ids) {
         recordService.deleteRecords(ids);
@@ -99,7 +99,7 @@ public class DashboardSitesRecordController extends BaseController {
      * @return 响应
      */
     @GetMapping("restore")
-    @PermissionMenu("SITES_NOVEL_QUEUE")
+    @PermissionMenu("SITES_RECORD")
     @ResponseBody
     public Response restore(@RequestParam("ids") String ids) {
         recordService.restoreRecords(ids);
