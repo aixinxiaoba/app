@@ -324,7 +324,7 @@ public class NovelServiceImpl extends BaseService<Novel> implements NovelService
         } else if (NovelSource.NS05.getCode().equals(novel.getSource())) {
             // xianqihaotianmi
             Document sectionDoc = HtmlUtil.parseUrl(NovelSource.NS05.getUrl() + "read/" + code + ".html");
-            title = sectionDoc.select(".panel-heading").html().replace("全部章节", "").trim();
+            title = sectionDoc.select(".panel-heading").html().replaceAll("全部章节", "").trim();
             content = sectionDoc.select(".content-body").html();
         } else if (NovelSource.NS06.getCode().equals(novel.getSource())) {
             // yuanzunxs
