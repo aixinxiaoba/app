@@ -15,7 +15,7 @@ public class NovelServiceTest extends AbstractTest {
 
     @Test
     public void testPullNovel() throws Exception {
-        novelService.pullNovels("3");
+        novelService.pullNovels("5");
         System.in.read();
     }
 

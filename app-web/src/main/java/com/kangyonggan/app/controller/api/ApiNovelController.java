@@ -42,7 +42,6 @@ public class ApiNovelController extends BaseController {
         List<Novel> novels = novelService.findAllNovels();
 
         response.put("novels", novels);
-        response.put("debug", false);
         return response;
     }
 
